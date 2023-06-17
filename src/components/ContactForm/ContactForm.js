@@ -1,10 +1,15 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from '../../redux/contactSlice';
+import { getContacts } from '../../redux/selectors';
+import { nanoid } from '@reduxjs/toolkit';
+import toast from 'react-hot-toast';
 
-export const ContactForm = ({onSubmit}) => {
-
+export const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
 
   const handleChange = ({ target: { name, value } }) => {
     switch (name) {
@@ -19,9 +24,18 @@ export const ContactForm = ({onSubmit}) => {
     }
   };
 
- const handleSubmit = event => {
+  const handleSubmit = event => {
     event.preventDefault();
-    onSubmit({name, number});
+    const isContact = contacts.find(
+      contacts => contacts.name.toLowerCase() === name.toLowerCase()
+    );
+    if (isContact) {
+      toast.error(`${name} is already in the contact list`);
+      setName('');
+      setNumber('');
+      return;
+    }
+    dispatch(addContact({ name, number, id: nanoid() }));
     setName('');
     setNumber('');
   };
@@ -34,7 +48,6 @@ export const ContactForm = ({onSubmit}) => {
           type="text"
           value={name}
           name="name"
-          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
           onChange={handleChange}
@@ -43,13 +56,12 @@ export const ContactForm = ({onSubmit}) => {
 
       <label>
         <span>Number</span>
-
         <input
           type="tel"
           name="number"
           value={number}
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+          title="Phone number must be digits can start with +"
           required
           onChange={handleChange}
         />
@@ -58,8 +70,4 @@ export const ContactForm = ({onSubmit}) => {
       <button type="submit">Add contact</button>
     </form>
   );
-}
-
-ContactForm.propTypes = {
-  addContact: PropTypes.func.isRequired,
 };

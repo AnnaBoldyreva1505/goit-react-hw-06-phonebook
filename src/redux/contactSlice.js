@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-
+import toast from 'react-hot-toast';
 const initialState = {
   contacts: [
     { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
@@ -13,14 +13,15 @@ const contactsSlice = createSlice({
   name: 'contacts',
   initialState,
   reducers: {
-    deposit(state, action) {
-      state.contacts += action.payload;
+    addContact(state, { payload }) {
+      state.contacts.push(payload);
     },
-    withdraw(state, action) {
-      state.contacts -= action.payload;
+    deleteContact(state, { payload }) {
+      state.contacts = state.contacts.filter(contact => contact.id !== payload);
+      toast.success(`Contact was deleted`);
     },
   },
 });
 
 export const contactsReducer = contactsSlice.reducer;
-export const { deposit, withdraw } = contactsSlice.actions;
+export const { addContact, deleteContact }  = contactsSlice.actions;

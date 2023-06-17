@@ -8,13 +8,12 @@ const filterSlice = createSlice({
   name: 'filter',
   initialState,
   reducers: {
-    filterContacts(state, action) {
-      state.status = action.payload;
-    },
+    filterContacts: (state, { payload }) => {
+      state.filter = payload.toLowerCase();
   },
+},
 });
 
-console.log(filterSlice)
 
 export const filterReducer = filterSlice.reducer;
 export const { filterContacts } = filterSlice.actions;
