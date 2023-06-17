@@ -15,7 +15,6 @@ export const Filter = () => {
         type="text"
         name="filter"
         onChange={changeFilter}
-        placeholder="Find contacts by name"
       />
     </label>
     </>
