@@ -15,13 +15,19 @@ const contactsSlice = createSlice({
   reducers: {
     addContact(state, { payload }) {
       state.contacts.push(payload);
+      toast.success(`Contact "${payload.name}" is added`);
     },
     deleteContact(state, { payload }) {
-      state.contacts = state.contacts.filter(contact => contact.id !== payload);
-      toast.success(`Contact was deleted`);
+      const contactToDelete = state.contacts.find(contact => contact.id === payload);
+
+      if (contactToDelete) {
+        state.contacts = state.contacts.filter(contact => contact.id !== payload);
+        toast.success(`Contact with name "${contactToDelete.name}" is deleted`);
+      }
     },
   },
 });
+
 
 export const contactsReducer = contactsSlice.reducer;
 export const { addContact, deleteContact }  = contactsSlice.actions;
