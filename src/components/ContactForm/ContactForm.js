@@ -36,6 +36,7 @@ export const ContactForm = () => {
       return;
     }
     dispatch(addContact({ name, number, id: nanoid() }));
+    toast.success(`Contact "${name}" is added`);
     setName('');
     setNumber('');
   };
@@ -60,7 +61,7 @@ export const ContactForm = () => {
           type="tel"
           name="number"
           value={number}
-          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+          pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
           title="Phone number must be digits can start with +"
           required
           onChange={handleChange}
